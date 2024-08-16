@@ -8,6 +8,7 @@ from typing import List, Dict
 
 index_range = __import__('0-simple_helper_function').index_range
 
+
 class Server:
     """Server class to paginate a database of popular baby names."""
     DATA_FILE = "Popular_Baby_Names.csv"
@@ -36,7 +37,8 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """Deletion-resilient hypermedia pagination"""
-        assert isinstance(index, int) and index >= 0 and index < len(self.dataset())
+        assert isinstance(index, int) and
+        index >= 0 and index < len(self.dataset())
         data = []
         next_index = index
         for i in range(page_size):
