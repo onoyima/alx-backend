@@ -31,7 +31,8 @@ class Server:
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
         start_index, end_index = index_range(page, page_size)
-        return self.dataset()[start_index:end_index] if start_index < len(self.dataset()) else []
+        return self.dataset()[start_index:end_index] if start_index <
+	len(self.dataset()) else []
 
     def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict:
         """Get a page with hypermedia pagination"""

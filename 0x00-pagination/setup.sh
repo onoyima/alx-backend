@@ -7,28 +7,10 @@ cat <<EOL > README.md
 This project is part of the ALX backend curriculum.
 
 ## Files
-- 0-simple_helper_function.py: Simple helper function to calculate start and end indexes for pagination.
 - 1-simple_pagination.py: Implementation of pagination using the Server class.
 - 2-hypermedia_pagination.py: Hypermedia pagination implementation.
 - 3-hypermedia_del_pagination.py: Deletion-resilient hypermedia pagination.
 EOL
-
-# Create 0-simple_helper_function.py
-cat <<EOL > 0-simple_helper_function.py
-#!/usr/bin/env python3
-"""
-Simple helper function to calculate start and end indexes for pagination.
-"""
-
-def index_range(page: int, page_size: int) -> tuple:
-    """
-    Returns a tuple containing the start index and end index
-    """
-    start_index = (page - 1) * page_size
-    end_index = page * page_size
-    return (start_index, end_index)
-EOL
-
 # Create 1-simple_pagination.py
 cat <<EOL > 1-simple_pagination.py
 #!/usr/bin/env python3
@@ -40,6 +22,7 @@ import csv
 from typing import List
 
 index_range = __import__('0-simple_helper_function').index_range
+
 
 class Server:
     """Server class to paginate a database of popular baby names."""
@@ -62,7 +45,8 @@ class Server:
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
         start_index, end_index = index_range(page, page_size)
-        return self.dataset()[start_index:end_index] if start_index < len(self.dataset()) else []
+        return self.dataset()[start_index:end_index] if start_index < len(self.dataset())
+	else []
 EOL
 
 # Create 2-hypermedia_pagination.py
@@ -78,6 +62,7 @@ import math
 
 index_range = __import__('0-simple_helper_function').index_range
 
+
 class Server:
     """Server class to paginate a database of popular baby names."""
     DATA_FILE = "Popular_Baby_Names.csv"
@@ -99,7 +84,8 @@ class Server:
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
         start_index, end_index = index_range(page, page_size)
-        return self.dataset()[start_index:end_index] if start_index < len(self.dataset()) else []
+        return self.dataset()[start_index:end_index] if start_index <
+	len(self.dataset()) else []
 
     def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict:
         """Get a page with hypermedia pagination"""
@@ -127,6 +113,7 @@ import csv
 from typing import List, Dict
 
 index_range = __import__('0-simple_helper_function').index_range
+
 
 class Server:
     """Server class to paginate a database of popular baby names."""
@@ -156,7 +143,8 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """Deletion-resilient hypermedia pagination"""
-        assert isinstance(index, int) and index >= 0 and index < len(self.dataset())
+        assert isinstance(index, int) and index >= 0 and index <
+	len(self.dataset())
         data = []
         next_index = index
         for i in range(page_size):
