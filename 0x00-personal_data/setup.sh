@@ -9,6 +9,7 @@ mkdir -p alx-backend-user-data/scripts
 echo "Creating necessary files..."
 touch alx-backend-user-data/0x00-personal_data/filtered_logger.py
 touch alx-backend-user-data/0x00-personal_data/main.py
+touch alx-backend-user-data/0x00-personal_data/encrypt_password.py
 touch alx-backend-user-data/0x00-personal_data/main.sql
 touch alx-backend-user-data/0x00-personal_data/README.md
 touch alx-backend-user-data/requirements.txt
@@ -64,6 +65,7 @@ Main file for testing the filtered logger
 """
 import logging
 from filtered_logger import RedactingFormatter, PII_FIELDS
+from encrypt_password import hash_password
 
 def get_logger() -> logging.Logger:
     """
@@ -82,40 +84,74 @@ def get_logger() -> logging.Logger:
 if __name__ == "__main__":
     logger = get_logger()
     logger.info("name=John Doe; email=john.doe@example.com; phone=123-456-7890; ssn=123-45-6789; password=secret")
+
+    # Test password hashing
+    password = "my_super_secret_password"
+    hashed = hash_password(password)
+    logger.info(f"Original password: {password}")
+    logger.info(f"Hashed password: {hashed}")
 EOL
 
-# Step 5: Add a placeholder SQL query to main.sql
+# Step 5: Add initial content to encrypt_password.py
+echo "Adding code to encrypt_password.py..."
+cat <<EOL > alx-backend-user-data/0x00-personal_data/encrypt_password.py
+#!/usr/bin/env python3
+"""
+Module for password encryption
+"""
+import bcrypt
+
+def hash_password(password: str) -> str:
+    """
+    Hash a password using bcrypt
+    """
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
+
+def verify_password(password: str, hashed: str) -> bool:
+    """
+    Verify a hashed password against the provided password
+    """
+    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+EOL
+
+# Step 6: Add a placeholder SQL query to main.sql
 echo "Adding placeholder SQL query to main.sql..."
 cat <<EOL > alx-backend-user-data/0x00-personal_data/main.sql
 -- SQL script placeholder
 SELECT * FROM users;
 EOL
 
-# Step 6: Add a simple README
+# Step 7: Add a simple README
 echo "Adding content to README.md..."
 cat <<EOL > alx-backend-user-data/0x00-personal_data/README.md
 # ALX Backend User Data
 
-This project focuses on creating a filtered logger to redact PII fields in log messages.
+This project focuses on creating a filtered logger to redact PII fields in log messages and securely handling passwords.
 
 ## Files
 
 - **filtered_logger.py**: Contains the RedactingFormatter class for redacting PII fields.
-- **main.py**: Main script to test the logger.
+- **main.py**: Main script to test the logger and password encryption.
+- **encrypt_password.py**: Module for hashing and verifying passwords.
 - **main.sql**: Placeholder for SQL commands.
 EOL
 
-# Step 7: Add a requirements.txt file for Python dependencies
+# Step 8: Add a requirements.txt file for Python dependencies
 echo "Adding dependencies to requirements.txt..."
 cat <<EOL > alx-backend-user-data/requirements.txt
-# Add any Python dependencies here
+bcrypt==4.0.1
 EOL
 
-# Step 8: Create a run script in the scripts directory
+# Step 9: Create a run script in the scripts directory
 echo "Creating a run script..."
 cat <<EOL > alx-backend-user-data/scripts/run.sh
 #!/bin/bash
 # Run the main Python script and check for pycodestyle compliance
+
+echo "Installing dependencies..."
+pip3 install -r ../requirements.txt
 
 echo "Running the main script..."
 python3 ../0x00-personal_data/main.py
@@ -124,8 +160,8 @@ echo "Checking code style with pycodestyle..."
 pycodestyle ../0x00-personal_data/
 EOL
 
-# Step 9: Make the scripts executable
+# Step 10: Make the scripts executable
 chmod +x alx-backend-user-data/scripts/run.sh
 
-# Step 10: Print completion message
+# Step 11: Print completion message
 echo "Setup complete. You can run the project using scripts/run.sh"
